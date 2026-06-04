@@ -21,7 +21,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	//便利機能
-	implementation("org.apache.commons:commons-lang3:3.14.0")
+	implementation 'org.apache.commons:commons-lang3:3.14.0'
 
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat-runtime'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
