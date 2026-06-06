@@ -17,6 +17,7 @@ public class Application {
 
 	private String name = "YUInu";
 	private String age = "30";
+
 	@Autowired
 	private StudentRepository repository;
 
@@ -54,8 +55,6 @@ public class Application {
 	@PostMapping("/studentName")
 	public void updateStudentName(String name){
 		this.name=name;
-	@DeleteMapping("/student")
-	public void deleteStudent(String name){
-		repository.deleteStudent(name);
+
 	}
 }
