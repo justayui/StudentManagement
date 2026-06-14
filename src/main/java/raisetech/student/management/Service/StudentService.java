@@ -1,5 +1,6 @@
 package raisetech.student.management.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,11 @@ public class StudentService {
   public void registerStudent(StudentDetail studentDetail){
     Student student = studentDetail.getStudent();
     repository.registerStudent(student);
-
+    for(StudentsCourses studentsCourses :studentDetail.getStudentsCourses()) {
+      studentsCourses.setStudentId(student.getId());
+      studentsCourses.setStartDate(LocalDate.now());
+      studentsCourses.setEndDate(LocalDate.now().plusYears(1));
+      coursesRepository.registerCourses(studentsCourses);
+    }
   }
 }

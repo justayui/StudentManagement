@@ -43,7 +43,15 @@
     <label for="remark">備考:</label>
     <input type="text" id="remark" th:field="*{student.remark}">
   </div>
-
+  <div th:each="course, stat : *{studentsCourses}">
+    <label for="courseName" th:for="studentsCourses[__${stat.index}__].courseName">受講コース名：</label>
+    <select id="courseName" th:id="studentCourse.__${stat.index}__.courseName" th:field="*{studentsCourses[__${stat.index}__].courseName}">
+     <option value="">選択してください</option>
+     <option value="Javaフルコース">Javaフルコース</option>
+     <option value="AWS基礎コース">AWS基礎コース</option>
+     <option value="Web開発コース">Wsb開発コース</option>
+    </select>
+  </div>
    <div>
      <button type="submit">登録</button>
    </div>
