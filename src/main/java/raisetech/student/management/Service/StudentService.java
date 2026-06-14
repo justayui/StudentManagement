@@ -5,16 +5,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentsCourses;
+import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.repository.StudentCoursesRepository;
 import raisetech.student.management.repository.StudentRepository;
 
 @Service
 public class StudentService {
 
   private StudentRepository repository;
+  private StudentCoursesRepository coursesRepository;
 
   @Autowired
-  public StudentService(StudentRepository repository) {
+  public StudentService(StudentRepository repository,StudentCoursesRepository coursesRepository) {
     this.repository = repository;
+    this.coursesRepository = coursesRepository;
   }
 
   public List<Student> searchStudentList(){
@@ -22,11 +26,16 @@ public class StudentService {
       .toList();
     return studentList;
   }
-
   public List<StudentsCourses> searchStudentCourseList() {
-  List<StudentsCourses> studentsCoursesList = repository.searchCourse().stream()
+  List<StudentsCourses> studentsCoursesList = coursesRepository.searchCourse().stream()
       .filter(studentsCourses -> "Javaフルコース".equals(studentsCourses.getCourseName()))
       .toList();
     return studentsCoursesList;
+  }
+
+  public void registerStudent(StudentDetail studentDetail){
+    Student student = studentDetail.getStudent();
+    repository.registerStudent(student);
+
   }
 }
