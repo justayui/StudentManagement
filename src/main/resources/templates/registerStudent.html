@@ -24,7 +24,12 @@
   </div>
   <div>
     <label for="gender">性別:</label>
-    <input type="text" id="gender" th:field="*{student.gender}" required/>
+    <select id="gender" th:field="*{student.gender}" required>
+    <option value="">選択してください</option>
+    <option value="male">男性</option>
+    <option value="female">女性</option>
+    <option value="other">その他</option>
+    </select>
   </div>
   <div>
     <label for="placeOfResidence">地域:</label>
