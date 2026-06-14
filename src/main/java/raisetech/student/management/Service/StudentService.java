@@ -3,6 +3,7 @@ package raisetech.student.management.Service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentsCourses;
 import raisetech.student.management.domain.StudentDetail;
@@ -33,6 +34,7 @@ public class StudentService {
     return studentsCoursesList;
   }
 
+  @Transactional
   public void registerStudent(StudentDetail studentDetail){
     Student student = studentDetail.getStudent();
     repository.registerStudent(student);
