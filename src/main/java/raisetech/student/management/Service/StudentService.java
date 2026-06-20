@@ -18,32 +18,50 @@ public class StudentService {
   private StudentCoursesRepository coursesRepository;
 
   @Autowired
-  public StudentService(StudentRepository repository,StudentCoursesRepository coursesRepository) {
+  public StudentService(StudentRepository repository, StudentCoursesRepository coursesRepository) {
     this.repository = repository;
     this.coursesRepository = coursesRepository;
   }
 
-  public List<Student> searchStudentList(){
-  List<Student> studentList = repository.search().stream()
-      .toList();
+  public List<Student> searchStudentList() {
+    List<Student> studentList = repository.search().stream()
+        .toList();
     return studentList;
   }
+
   public List<StudentsCourses> searchStudentCourseList() {
-  List<StudentsCourses> studentsCoursesList = coursesRepository.searchCourse().stream()
-      .filter(studentsCourses -> "Javaフルコース".equals(studentsCourses.getCourseName()))
-      .toList();
+    List<StudentsCourses> studentsCoursesList = coursesRepository.searchCourse().stream()
+        .filter(studentsCourses -> "Javaフルコース".equals(studentsCourses.getCourseName()))
+        .toList();
     return studentsCoursesList;
   }
 
   @Transactional
-  public void registerStudent(StudentDetail studentDetail){
+  public void registerStudent(StudentDetail studentDetail) {
     Student student = studentDetail.getStudent();
     repository.registerStudent(student);
-    for(StudentsCourses studentsCourses :studentDetail.getStudentsCourses()) {
+    for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
       studentsCourses.setStudentId(student.getId());
       studentsCourses.setStartDate(LocalDate.now());
       studentsCourses.setEndDate(LocalDate.now().plusYears(1));
       coursesRepository.registerCourses(studentsCourses);
+    }
+  }
+
+  public StudentDetail getStudentById(Integer id) {
+    Student student = repository.findById(id);
+    List<StudentsCourses> studentsCoursesList = coursesRepository.findByStudentId(id);
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentsCourses(studentsCoursesList);
+    return studentDetail;
+  }
+
+  @Transactional
+  public void updateStudent(StudentDetail studentDetail) {
+    repository.updateStudent(studentDetail.getStudent());
+    for(StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
+      coursesRepository.updateStudentCourses(studentsCourses);
     }
   }
 }
