@@ -6,7 +6,10 @@
 <body>
 <h1>受講生情報更新</h1>
 <form th:action="@{/updateStudent}" th:object="${studentDetail}" th:method="post">
-  <input type="hidden" th:field="*{student.id}" />
+  <div>
+    <label for="id">ID:</label>
+    <input type="text" id="id" th:field="*{student.id}" required/>
+  </div>
   <div>
     <label for="name">名前:</label>
     <input type="text" id="name" th:field="*{student.name}" required/>
@@ -43,6 +46,10 @@
   <div>
     <label for="remark">備考:</label>
     <input type="text" id="remark" th:field="*{student.remark}">
+  </div>
+  <div>
+    <label for="isDeleted">キャンセル:</label>
+    <input type="checkbox" id="isDeleted" th:field="*{student.deleted}">
   </div>
   <div th:each="course, stat : *{studentsCourses}">
     <input type="hidden" th:field="*{studentsCourses[__${stat.index}__].id}" />
