@@ -24,14 +24,14 @@ public class StudentRestController {
     this.converter = converter;
   }
 
-  @GetMapping("/studentList")
+  @GetMapping("/api/studentList")
   public List<StudentDetail> getStudentList(){
     List<Student> students = service.searchStudentList();
     List<StudentsCourses> studentsCourses = service.searchStudentCourseList();
     return converter.convertStudentDetails(students, studentsCourses);
   }
 
-  @PostMapping("/updateStudent")
+  @PostMapping("/api/updateStudent")
   public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
     return ResponseEntity.ok("更新処理が成功しました");
