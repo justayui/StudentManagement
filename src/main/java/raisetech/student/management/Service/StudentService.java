@@ -14,8 +14,8 @@ import raisetech.student.management.repository.StudentRepository;
 @Service
 public class StudentService {
 
-  private StudentRepository repository;
-  private StudentCoursesRepository coursesRepository;
+  private final StudentRepository repository;
+  private final StudentCoursesRepository coursesRepository;
 
   @Autowired
   public StudentService(StudentRepository repository, StudentCoursesRepository coursesRepository) {
@@ -31,7 +31,6 @@ public class StudentService {
 
   public List<StudentsCourses> searchStudentCourseList() {
     List<StudentsCourses> studentsCoursesList = coursesRepository.searchCourse().stream()
-        .filter(studentsCourses -> "Javaフルコース".equals(studentsCourses.getCourseName()))
         .toList();
     return studentsCoursesList;
   }
