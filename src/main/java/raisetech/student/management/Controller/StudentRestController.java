@@ -15,24 +15,24 @@ import raisetech.student.management.domain.StudentDetail;
 
 @RestController
 public class StudentRestController {
-  private StudentService service;
-  private StudentConverter converter;
+  private final StudentService service;
+  private final StudentConverter converter;
 
   @Autowired
-  public StudentRestController(StudentService service, StudentConverter converter) {
+  public StudentRestController(StudentService service,StudentConverter converter){
     this.service = service;
     this.converter = converter;
   }
 
   @GetMapping("/api/studentList")
-  public List<StudentDetail> getStudentList(){
+  public List<StudentDetail> getStudentList() {
     List<Student> students = service.searchStudentList();
     List<StudentsCourses> studentsCourses = service.searchStudentCourseList();
     return converter.convertStudentDetails(students, studentsCourses);
   }
 
   @PostMapping("/api/updateStudent")
-  public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
+  public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail){
     service.updateStudent(studentDetail);
     return ResponseEntity.ok("更新処理が成功しました");
   }
