@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import raisetech.student.management.data.Student;
-import raisetech.student.management.data.StudentsCourses;
+import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 
 /**
@@ -20,20 +20,20 @@ public class StudentConverter {
    * 受講生コース情報は受講生に対して複数存在するため、ループを回して受講生詳細情報を組み立てる。
    *
    * @param students 受講生一覧
-   * @param studentsCourses 受講生コース情報のリスト
+   * @param studentCourseList 受講生コース情報のリスト
    * @return 受講生詳細情報のリスト
    */
   public @NonNull List<StudentDetail> convertStudentDetails(List<Student> students,
-      List<StudentsCourses> studentsCourses) {
+      List<StudentCourse> studentCourseList) {
     List<StudentDetail> studentDetails = new ArrayList<>();
     students.forEach(student -> {
       StudentDetail studentDetail = new StudentDetail();
       studentDetail.setStudent(student);
 
-      List<StudentsCourses> convertStudentCourses = studentsCourses.stream()
-          .filter(studentsCourse -> student.getId() == studentsCourse.getStudentId())
+      List<StudentCourse> convertStudentCourseList = studentCourseList.stream()
+          .filter(studentCourse -> student.getId() == studentCourse.getStudentId())
           .collect(Collectors.toList());
-      studentDetail.setStudentsCourses(convertStudentCourses);
+      studentDetail.setStudentCourseList(convertStudentCourseList);
       studentDetails.add(studentDetail);
     });
     return studentDetails;
