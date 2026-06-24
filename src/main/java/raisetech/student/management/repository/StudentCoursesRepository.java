@@ -8,22 +8,33 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import raisetech.student.management.data.StudentsCourses;
 
+/**
+ * 受講生コーステーブルと紐づくリポジトリです。
+ */
 @Mapper
 public interface StudentCoursesRepository {
 
+  /**
+   * 受講生のコース情報の全件検索を行います。
+   *
+   * @return 受講生コース情報（全件）
+   */
   @Select("SELECT * FROM students_courses")
   List<StudentsCourses> searchCourse();
 
-  @Select("SELECT * FROM students_courses WHERE id = #{id}")
-  StudentsCourses searchStudentCourses(Integer id);
+  /**
+   * 受講生IDに紐づく受講生コース情報を検索します。
+   *
+   * @param studentId 受講生ID
+   * @return 受講生IDに紐づく受講生コース情報
+   */
+  @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
+  List<StudentsCourses> searchStudentCourses(Integer studentId);
 
   @Insert("INSERT INTO students_courses(id,course_name,start_date,end_date,student_id)"
       + "VALUES(#{id},#{courseName},#{startDate},#{endDate},#{studentId})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
       void registerCourses(StudentsCourses studentsCourses);
-
-  @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
-  List<StudentsCourses> findByStudentId(Integer studentId);
 
   @Update("UPDATE students_courses SET course_name = #{courseName} WHERE id=#{id}")
    void updateStudentCourses(StudentsCourses studentsCourses);
