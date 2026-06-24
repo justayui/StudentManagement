@@ -36,7 +36,7 @@ public class StudentService {
   }
 
   @Transactional
-  public void registerStudent(StudentDetail studentDetail) {
+  public StudentDetail registerStudent(StudentDetail studentDetail) {
     Student student = studentDetail.getStudent();
     repository.registerStudent(student);
     for (StudentsCourses studentsCourses : studentDetail.getStudentsCourses()) {
@@ -45,6 +45,7 @@ public class StudentService {
       studentsCourses.setEndDate(LocalDate.now().plusYears(1));
       coursesRepository.registerCourses(studentsCourses);
     }
+    return studentDetail;
   }
 
   public StudentDetail getStudentById(Integer id) {

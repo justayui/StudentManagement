@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import raisetech.student.management.Controller.converter.StudentConverter;
 import raisetech.student.management.Service.StudentService;
@@ -18,8 +19,8 @@ import raisetech.student.management.domain.StudentDetail;
 @Controller
 public class StudentController {
 
-  private StudentService service;
-  private StudentConverter converter;
+  private final StudentService service;
+  private final StudentConverter converter;
 
   @Autowired
   public StudentController(StudentService service, StudentConverter converter) {
@@ -44,6 +45,13 @@ public class StudentController {
     return "registerStudent";
   }
 
+  @GetMapping("/student/detail/{id}")
+  public String showStudent(@PathVariable Integer id, Model model){
+    StudentDetail studentDetail = service.getStudentById(id);
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
+  }
+
   @PostMapping("/registerStudent")
   public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result){
     if(result.hasErrors()){
@@ -51,5 +59,14 @@ public class StudentController {
     }
     service.registerStudent(studentDetail);
     return "redirect:/studentList";
+  }
+
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
+    if (result.hasErrors()) {
+      return "updateStudent";
+    }
+    service.updateStudent(studentDetail);
+    return "redirect:studentList";
   }
 }
