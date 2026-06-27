@@ -1,11 +1,7 @@
 package raisetech.student.management.repository;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 import raisetech.student.management.data.Student;
 
 
@@ -20,7 +16,6 @@ public interface StudentRepository {
    *
    * @return 受講生一覧（全件）
    */
-  @Select("SELECT * FROM students")
   List<Student> search();
 
   /**
@@ -29,7 +24,6 @@ public interface StudentRepository {
    * @param id 受講生ID
    * @return 受講生情報
    */
-  @Select("SELECT * FROM students WHERE id = #{id}")
   Student searchStudent(Integer id);
 
   /**
@@ -37,9 +31,6 @@ public interface StudentRepository {
    *
    * @param student 受講生
    */
-  @Insert("INSERT INTO students (name, name_kana, nickname, age, gender, place_of_residence, email, remark, is_deleted) " +
-      "VALUES (#{name}, #{nameKana}, #{nickname}, #{age}, #{gender}, #{placeOfResidence}, #{email}, #{remark}, false)")
-  @Options(useGeneratedKeys = true, keyProperty = "id")
   void registerStudent(Student student);
 
   /**
@@ -47,7 +38,6 @@ public interface StudentRepository {
    *
    * @param student 受講生
    */
-  @Update("UPDATE students SET name=#{name}, name_kana=#{nameKana}, nickname=#{nickname}, age=#{age}, gender=#{gender}, place_of_Residence=#{placeOfResidence}, email=#{email}, remark=#{remark}, is_deleted=#{isDeleted} WHERE id=#{id}")
   void updateStudent(Student student);
 
 
