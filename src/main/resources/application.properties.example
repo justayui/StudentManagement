@@ -5,4 +5,7 @@ spring.datasource.username=your_username
 spring.datasource.password=your_password
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
+# MyBatisの設定
 mybatis.configuration.map-underscore-to-camel-case=true
+spring.jpa.open-in-view=false
+mybatis.mapper-locations=classpath*:/mapper/*.xml

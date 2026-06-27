@@ -9,7 +9,7 @@ import raisetech.student.management.Controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
-import raisetech.student.management.repository.StudentCoursesRepository;
+import raisetech.student.management.repository.StudentCourseRepository;
 import raisetech.student.management.repository.StudentRepository;
 
 /**
@@ -20,11 +20,11 @@ import raisetech.student.management.repository.StudentRepository;
 public class StudentService {
 
   private final StudentRepository repository;
-  private final StudentCoursesRepository courseRepository;
+  private final StudentCourseRepository courseRepository;
   public StudentConverter converter;
 
   @Autowired
-  public StudentService(StudentRepository repository, StudentCoursesRepository courseRepository,StudentConverter converter) {
+  public StudentService(StudentRepository repository, StudentCourseRepository courseRepository,StudentConverter converter) {
     this.repository = repository;
     this.courseRepository = courseRepository;
     this.converter = converter;
