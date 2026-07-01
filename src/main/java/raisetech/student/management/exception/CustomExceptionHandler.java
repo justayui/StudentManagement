@@ -23,7 +23,7 @@ public class CustomExceptionHandler {
   @ExceptionHandler({MethodArgumentTypeMismatchException.class, HandlerMethodValidationException.class,
       ConstraintViolationException.class})
   public ResponseEntity<String> handlerTypeMismatchOrValidationException(Exception ex){
-    String errorMessage = "IDの入力値が正しくありません。3桁までの数値を入力してください。";
+    String errorMessage = ex.getMessage();
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
   }
 

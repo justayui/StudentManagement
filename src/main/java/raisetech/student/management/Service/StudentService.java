@@ -37,7 +37,7 @@ public class StudentService {
    *
    * @return 受講生詳細一覧（全件）
    */
-  public List<StudentDetail> searchStudentList() throws TestException {
+  public List<StudentDetail> searchStudentList(){
     List<Student> studentList = repository.search();
     List<StudentCourse> studentCourseList = courseRepository.searchCourse();
     if(studentList.isEmpty()){
@@ -53,7 +53,7 @@ public class StudentService {
    * @param id 受講生ID
    * @return 受講生情報
    */
-  public StudentDetail getStudentById(Integer id) throws TestException{
+  public StudentDetail getStudentById(Integer id){
     Student student = repository.searchStudent(id);
     if(student == null){
       throw new TestException("ID"+ id +"に該当する生徒情報はありませんでした。");
@@ -102,7 +102,7 @@ public class StudentService {
    * @param studentDetail 受講生詳細
    */
   @Transactional
-  public void updateStudent(StudentDetail studentDetail) throws TestException {
+  public void updateStudent(StudentDetail studentDetail){
     Student existingStudent = repository.searchStudent(studentDetail.getStudent().getId());
     if(existingStudent == null){
       throw new TestException("指定されたIDの生徒が見つからないため、更新できません。");
