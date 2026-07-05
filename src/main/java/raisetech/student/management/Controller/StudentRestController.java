@@ -1,10 +1,9 @@
 package raisetech.student.management.Controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import raisetech.student.management.Service.StudentService;
 import raisetech.student.management.domain.StudentDetail;
 
-
 /**
  * 受講生の検索や登録、更新などを行うREST APIとして受け付けるControllerです。
  */
 @Validated
 @RestController
-public class StudentRestController {
+public class StudentRestController implements StudentApi {
   private final StudentService service;
 
   @Autowired
@@ -37,8 +35,9 @@ public class StudentRestController {
    * @return 受講生詳細一覧（全件）
    */
   @GetMapping("/api/studentList")
+  @Override
   public List<StudentDetail> getStudentList(){
-   return service.searchStudentList();
+    return service.searchStudentList();
   }
 
   /**
@@ -49,8 +48,9 @@ public class StudentRestController {
    * @return 受講生情報
    */
   @GetMapping("/api/student/detail/{id}")
-  public StudentDetail showStudent(@PathVariable @Min(1) @Max(999) Integer id){
-   return service.getStudentById(id);
+  @Override
+  public ResponseEntity<StudentDetail> showStudent(@PathVariable Integer id){
+   return ResponseEntity.ok(service.getStudentById(id));
   }
 
   /**
@@ -60,9 +60,9 @@ public class StudentRestController {
    * @return 実行結果
    */
   @PostMapping("/api/registerStudent")
-  public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail){
-    StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
-    return ResponseEntity.ok(responseStudentDetail);
+  @Override
+  public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail){
+    return ResponseEntity.status(HttpStatus.CREATED).body(service.registerStudent(studentDetail));
   }
 
   /**
@@ -73,10 +73,15 @@ public class StudentRestController {
    * @return 実行結果
    */
   @PutMapping("/api/updateStudent")
-  public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail){
+  @Override
+  public ResponseEntity<SuccessResponse> updateStudent(@RequestBody StudentDetail studentDetail){
     service.updateStudent(studentDetail);
-    return ResponseEntity.ok("更新処理が成功しました");
+    return ResponseEntity.ok(new SuccessResponse("更新処理が成功しました。"));
   }
 
+  @Schema(description = "処理成功時の共通メッセージレスポンス")
+  public record SuccessResponse(
+      @Schema(description = "成功メッセージの中身", example = "更新が完了しました。")
+      String message) {}
 
 }
