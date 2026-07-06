@@ -9,6 +9,7 @@ import raisetech.student.management.Controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.TestException;
 import raisetech.student.management.repository.StudentCourseRepository;
 import raisetech.student.management.repository.StudentRepository;
 
@@ -36,9 +37,12 @@ public class StudentService {
    *
    * @return 受講生詳細一覧（全件）
    */
-  public List<StudentDetail> searchStudentList() {
+  public List<StudentDetail> searchStudentList(){
     List<Student> studentList = repository.search();
     List<StudentCourse> studentCourseList = courseRepository.searchCourse();
+    if(studentList.isEmpty()){
+      throw new TestException("現在、登録されている学生情報は0件です。");
+    }
     return converter.convertStudentDetails(studentList, studentCourseList);
   }
 
@@ -49,8 +53,11 @@ public class StudentService {
    * @param id 受講生ID
    * @return 受講生情報
    */
-  public StudentDetail getStudentById(Integer id) {
+  public StudentDetail getStudentById(Integer id){
     Student student = repository.searchStudent(id);
+    if(student == null){
+      throw new TestException("ID"+ id +"に該当する生徒情報はありませんでした。");
+    }
     List<StudentCourse> studentCourseList = courseRepository.searchStudentCourse(student.getId());
     return new StudentDetail(student, studentCourseList);
   }
@@ -95,7 +102,11 @@ public class StudentService {
    * @param studentDetail 受講生詳細
    */
   @Transactional
-  public void updateStudent(StudentDetail studentDetail) {
+  public void updateStudent(StudentDetail studentDetail){
+    Student existingStudent = repository.searchStudent(studentDetail.getStudent().getId());
+    if(existingStudent == null){
+      throw new TestException("指定されたIDの生徒が見つからないため、更新できません。");
+    }
     repository.updateStudent(studentDetail.getStudent());
     studentDetail.getStudentCourseList().forEach(courseRepository::updateStudentCourse);
   }
