@@ -77,7 +77,7 @@ public class StudentRestController implements StudentApi {
    */
   @PutMapping("/api/updateStudent")
   @Override
-  public ResponseEntity<SuccessResponse> updateStudent(@RequestBody StudentDetail studentDetail){
+  public ResponseEntity<SuccessResponse> updateStudent(@RequestBody @Valid StudentDetail studentDetail){
     service.updateStudent(studentDetail);
     return ResponseEntity.ok(new SuccessResponse("更新処理が成功しました。"));
   }
