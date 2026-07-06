@@ -1,6 +1,9 @@
 package raisetech.student.management.Controller;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +52,7 @@ public class StudentRestController implements StudentApi {
    */
   @GetMapping("/api/student/detail/{id}")
   @Override
-  public ResponseEntity<StudentDetail> showStudent(@PathVariable Integer id){
+  public ResponseEntity<StudentDetail> showStudent(@PathVariable @Min(1) @Max(999) Integer id){
    return ResponseEntity.ok(service.getStudentById(id));
   }
 
@@ -61,7 +64,7 @@ public class StudentRestController implements StudentApi {
    */
   @PostMapping("/api/registerStudent")
   @Override
-  public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail){
+  public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail){
     return ResponseEntity.status(HttpStatus.CREATED).body(service.registerStudent(studentDetail));
   }
 

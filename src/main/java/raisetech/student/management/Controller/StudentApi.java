@@ -51,7 +51,7 @@ public interface StudentApi {
       ),
       @ApiResponse(
           responseCode = "404",
-          description = "エラー：ID\"+ id +\"に該当する生徒情報はありませんでした。",
+          description = "エラー：指定されたIDに該当する受講生データが存在しません。",
           content = @Content(schema = @Schema(implementation = ErrorResponse.class))
       ),
       @ApiResponse(
