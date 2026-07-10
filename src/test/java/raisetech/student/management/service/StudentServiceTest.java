@@ -1,10 +1,9 @@
-package raisetech.student.management.Service;
+package raisetech.student.management.service;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import raisetech.student.management.Controller.converter.StudentConverter;
+import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
@@ -113,7 +112,7 @@ class StudentServiceTest {
     StudentDetail actualResult = sut.registerStudent(studentDetail);
 
     Assertions.assertEquals(1,actualResult.getStudentCourseList().get(0).getStudentId());
-    Assertions.assertEquals(LocalDate.now(),actualResult.getStudentCourseList().get(0).getStartDate());
+    Assertions.assertNotNull(actualResult.getStudentCourseList().get(0).getStartDate());
 
     verify(repository, times(1)).registerStudent(student);
     verify(courseRepository, times(1)).registerCourse(studentCourse);

@@ -1,11 +1,11 @@
-package raisetech.student.management.Service;
+package raisetech.student.management.service;
 
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import raisetech.student.management.Controller.converter.StudentConverter;
+import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
@@ -22,7 +22,7 @@ public class StudentService {
 
   private final StudentRepository repository;
   private final StudentCourseRepository courseRepository;
-  public StudentConverter converter;
+  private final StudentConverter converter;
 
   @Autowired
   public StudentService(StudentRepository repository, StudentCourseRepository courseRepository,StudentConverter converter) {
@@ -87,7 +87,7 @@ public class StudentService {
    * @param studentCourse 受講生コース情報
    * @param student 受講生
    */
-  void initStudentCourse(StudentCourse studentCourse, Student student) {
+  private void initStudentCourse(StudentCourse studentCourse, Student student) {
     LocalDate now = LocalDate.now();
 
     studentCourse.setStudentId(student.getId());
