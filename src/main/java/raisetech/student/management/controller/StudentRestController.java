@@ -1,4 +1,4 @@
-package raisetech.student.management.Controller;
+package raisetech.student.management.controller;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import raisetech.student.management.Service.StudentService;
+import raisetech.student.management.service.StudentService;
 import raisetech.student.management.domain.StudentDetail;
 
 /**

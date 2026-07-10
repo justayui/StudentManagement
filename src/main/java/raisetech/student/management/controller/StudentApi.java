@@ -1,4 +1,4 @@
-package raisetech.student.management.Controller;
+package raisetech.student.management.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Min;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
-import raisetech.student.management.Controller.StudentRestController.SuccessResponse;
+import raisetech.student.management.controller.StudentRestController.SuccessResponse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.ErrorResponse;
 
