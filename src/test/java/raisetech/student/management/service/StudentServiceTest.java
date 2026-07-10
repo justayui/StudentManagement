@@ -4,6 +4,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -99,23 +100,30 @@ class StudentServiceTest {
   //受講生詳細の登録に関するテスト
   @Test
     void 受講生詳細の登録＿リポジトリに適切な情報を渡せていること(){
-    StudentDetail studentDetail = new StudentDetail();
     Student student = new Student();
-    student.setId(1);
     StudentCourse studentCourse = new StudentCourse();
-    List<StudentCourse> courseList = new ArrayList<>();
-    courseList.add(studentCourse);
+    List<StudentCourse> courseList = List.of(studentCourse);
+    StudentDetail studentDetail = new StudentDetail(student,courseList);
 
-    studentDetail.setStudent(student);
-    studentDetail.setStudentCourseList(courseList);
-
-    StudentDetail actualResult = sut.registerStudent(studentDetail);
-
-    Assertions.assertEquals(1,actualResult.getStudentCourseList().get(0).getStudentId());
-    Assertions.assertNotNull(actualResult.getStudentCourseList().get(0).getStartDate());
+    sut.registerStudent(studentDetail);
 
     verify(repository, times(1)).registerStudent(student);
     verify(courseRepository, times(1)).registerCourse(studentCourse);
+  }
+
+  @Test
+  void 受講生詳細の登録＿初期化処理が行われること(){
+    int id = 999;
+    Student student = new Student();
+    student.setId(id);
+    StudentCourse studentCourse = new StudentCourse();
+
+    sut.initStudentCourse(studentCourse,student.getId());
+
+    Assertions.assertEquals(999, studentCourse.getStudentId());
+    //getTimeFormatter?を使ってより厳密に検証するのが望ましい。
+    Assertions.assertEquals(LocalDate.now(),studentCourse.getStartDate());
+    Assertions.assertEquals(LocalDate.now().plusYears(1), studentCourse.getEndDate());
   }
 
   //受講生詳細の更新
@@ -123,14 +131,9 @@ class StudentServiceTest {
     void 受講生詳細の更新＿受講生が存在する場合＿適切に更新処理が呼び出されること(){
     Student student = new Student();
     student.setId(1);
-
     StudentCourse studentCourse = new StudentCourse();
-    List<StudentCourse> courseList = new ArrayList<>();
-    courseList.add(studentCourse);
-
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentCourseList(courseList);
+    List<StudentCourse> courseList = List.of(studentCourse);
+    StudentDetail studentDetail = new StudentDetail(student,courseList);
 
     when(repository.searchStudent(1)).thenReturn(student);
 
