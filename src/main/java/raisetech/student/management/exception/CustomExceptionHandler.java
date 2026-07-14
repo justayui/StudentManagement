@@ -22,8 +22,8 @@ public class CustomExceptionHandler {
   //自作の例外処理用
   @ExceptionHandler(TestException.class)
   public ResponseEntity<ErrorResponse> handleTestException(TestException ex){
-    ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),ex.getMessage());
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(),ex.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
   }
 
   //URLのIDに関する例外処理用
