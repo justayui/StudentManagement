@@ -9,12 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
-import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
@@ -39,7 +34,8 @@ class StudentRestControllerTest {
   @MockitoBean
   private StudentService service;
 
-  private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+  @SuppressWarnings("resource")
+  private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
   //受講生詳細一覧検索に関するテスト
   @Test
@@ -177,7 +173,7 @@ class StudentRestControllerTest {
 
     Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
-    assertThat(violations).hasSize(0);
+    Assertions.assertThat(violations).hasSize(0);
   }
 
   @ParameterizedTest
@@ -223,28 +219,4 @@ class StudentRestControllerTest {
             .content(jsonContent))
         .andExpect(status().isBadRequest());
   }
-
-//コンバーターのテスト
-@Test
-void 受講生と受講生コース情報を受講生詳細に変換できること() throws Exception{
-    Student student = new Student();
-    student.setId(1);
-    List<Student> studentList = new ArrayList<>();
-    studentList.add(student);
-    StudentCourse studentCourse = new StudentCourse();
-    studentCourse.setStudentId(1);
-    List<StudentCourse> courseList = new ArrayList<>();
-    courseList.add(studentCourse);
-    List<StudentDetail> expectedDetailList = new ArrayList<>();
-    expectedDetailList.add(new StudentDetail());
-
-    StudentConverter converter = new StudentConverter();
-    List<StudentDetail> actualResult = converter.convertStudentDetails(studentList,courseList);
-
-    Assertions.assertEquals(1,actualResult.size());
-    StudentDetail actualDetail = actualResult.get(0);
-    Assertions.assertEquals(1,actualDetail.getStudent().getId());
-
-}
-
 }
