@@ -4,23 +4,23 @@
 
   <!-- 受講生コース情報の全件検索 -->
   <select id="searchCourse" resultType="raisetech.student.management.data.StudentCourse">
-    SELECT * FROM students_courses
+    SELECT * FROM student_course
   </select>
 
   <!-- 受講生IDに紐づく受講生コース情報の検索 -->
   <select id="searchStudentCourse" resultType="raisetech.student.management.data.StudentCourse">
-    SELECT * FROM students_courses WHERE student_id = #{studentId}
+    SELECT * FROM student_course WHERE student_id = #{studentId}
   </select>
 
   <!-- 受講生コース情報の登録-->
   <insert id="registerCourse" useGeneratedKeys = "true" keyProperty = "id">
-    INSERT INTO students_courses(id,course_name,start_date,end_date,student_id)
+    INSERT INTO student_course(id,course_name,start_date,end_date,student_id)
     VALUES(#{id},#{courseName},#{startDate},#{endDate},#{studentId})
   </insert>
 
   <!-- 受講生コースの更新 -->
   <update id="updateStudentCourse">
-    UPDATE students_courses SET course_name = #{courseName} WHERE id=#{id}
+    UPDATE student_course SET course_name = #{courseName} WHERE id=#{id}
   </update>
 
 </mapper>
