@@ -4,23 +4,23 @@
 
   <!-- 受講生の全件検索 -->
   <select id="search" resultType="raisetech.student.management.data.Student">
-    SELECT * FROM students
+    SELECT * FROM student
   </select>
 
   <!-- 受講生の検索 -->
   <select id="searchStudent" resultType="raisetech.student.management.data.Student">
-    SELECT * FROM students WHERE id = #{id}
+    SELECT * FROM student WHERE id = #{id}
   </select>
 
   <!-- 受講生の新規登録 -->
   <insert id="registerStudent" useGeneratedKeys = "true" keyProperty = "id">
-    INSERT INTO students (name, name_kana, nickname, age, gender, place_of_residence, email, remark, is_deleted
+    INSERT INTO student (name, name_kana, nickname, age, gender, place_of_residence, email, remark, is_deleted)
     VALUES (#{name}, #{nameKana}, #{nickname}, #{age}, #{gender}, #{placeOfResidence}, #{email}, #{remark}, false)
   </insert>
 
   <!-- 受講生情報の更新 -->
   <update id="updateStudent">
-    UPDATE students SET name=#{name}, name_kana=#{nameKana}, nickname=#{nickname}, age=#{age}, gender=#{gender}, place_of_Residence=#{placeOfResidence}, email=#{email}, remark=#{remark}, is_deleted=#{isDeleted} WHERE id=#{id}
+    UPDATE student SET name=#{name}, name_kana=#{nameKana}, nickname=#{nickname}, age=#{age}, gender=#{gender}, place_of_Residence=#{placeOfResidence}, email=#{email}, remark=#{remark}, is_deleted=#{isDeleted} WHERE id=#{id}
   </update>
 
 </mapper>
