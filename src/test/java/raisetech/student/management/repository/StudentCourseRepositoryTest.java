@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import raisetech.student.management.data.StudentCourse;
-import raisetech.student.management.data.enums.EnumCourseName;
 
 @MybatisTest
 class StudentCourseRepositoryTest {
@@ -29,13 +28,13 @@ class StudentCourseRepositoryTest {
     List<StudentCourse> actual = courseRepository.searchStudentCourse(1);
 
     assertThat(actual).hasSize(2);
-    assertThat(actual).extracting("courseName").containsExactlyInAnyOrder(EnumCourseName.JAVA_FULL,EnumCourseName.AWS);
+    assertThat(actual).extracting("courseName").containsExactlyInAnyOrder("Javaフルコース","AWS基礎コース");
   }
 
   @Test
   void 受講生コース情報の登録ができること(){
     StudentCourse course = new StudentCourse();
-    course.setCourseName(EnumCourseName.JAVA_FULL);
+    course.setCourseName("Javaフルコース");
     course.setStartDate(LocalDate.now());
     course.setEndDate(LocalDate.now().plusYears(1));
 
@@ -52,7 +51,7 @@ class StudentCourseRepositoryTest {
 
     StudentCourse targetCourse = null;
     for(StudentCourse course : courseList){
-      if(EnumCourseName.JAVA_FULL.equals(course.getCourseName())){
+      if("Javaフルコース".equals(course.getCourseName())){
         targetCourse = course;
         break;
       }
@@ -60,11 +59,11 @@ class StudentCourseRepositoryTest {
 
     assertThat(targetCourse).isNotNull();
 
-    targetCourse.setCourseName(EnumCourseName.WEB_DEVELOPMENT);
+    targetCourse.setCourseName("Web開発コース");
     courseRepository.updateStudentCourse(targetCourse);
 
     List<StudentCourse> actual = courseRepository.searchStudentCourse(1);
     assertThat(actual).hasSize(2);
-    assertThat(actual).extracting("courseName").containsExactlyInAnyOrder(EnumCourseName.WEB_DEVELOPMENT,EnumCourseName.AWS);
+    assertThat(actual).extracting("courseName").containsExactlyInAnyOrder("Web開発コース","AWS基礎コース");
   }
 }

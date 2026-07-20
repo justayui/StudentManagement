@@ -21,7 +21,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import raisetech.student.management.data.Student;
-import raisetech.student.management.data.enums.EnumGender;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
@@ -108,13 +107,13 @@ class StudentRestControllerTest {
                      "nameKana" : "タナカタロウ",
                      "nickname" : "タロー",
                      "email" : "test@example.com",
-                     "gender" : "MALE",
+                     "gender" : "male",
                      "placeOfResidence" : "福岡",
                      "remark" : ""
                   },
                   "studentCourseList":[
                      {
-                       "courseName" : "JAVA_FULL"
+                       "courseName" : "Javaフルコース"
                      }
                   ]
                 }
@@ -138,7 +137,7 @@ class StudentRestControllerTest {
                      "nameKana" : "タナカタロウ",
                      "nickname" : "タロー",
                      "email" : "test@example.com",
-                     "gender" : "MALE",
+                     "gender" : "male",
                      "placeOfResidence" : "福岡",
                      "remark" : ""
                   },
@@ -146,7 +145,7 @@ class StudentRestControllerTest {
                      {
                        "id" : 20,
                        "studentId" : 10,
-                       "courseName" : "JAVA_FULL",
+                       "courseName" : "Javaフルコース",
                        "startDate" : "2026-07-07",
                        "endDate" : "2027-07-07"
                      }
@@ -169,7 +168,7 @@ class StudentRestControllerTest {
     student.setNameKana("タナカタロウ");
     student.setNickname("タロー");
     student.setEmail("test@example.com");
-    student.setGender(EnumGender.MALE);
+    student.setGender("male");
     student.setPlaceOfResidence("福岡");
 
     Set<ConstraintViolation<Student>> violations = validator.validate(student);
@@ -194,7 +193,7 @@ class StudentRestControllerTest {
     String nickname = field.equals("nickname") ? invalidValue : "タロー";
     String email = field.equals("email") ? invalidValue : "test@example.com";
     String placeOfResidence = field.equals("placeOfResidence") ? invalidValue : "福岡県福岡市";
-    String courseName = field.equals("courseName") ? invalidValue : "JAVA_FULL";
+    String courseName = field.equals("courseName") ? invalidValue : "Javaコース";
 
     String jsonContent = String.format("""
         {
@@ -205,7 +204,7 @@ class StudentRestControllerTest {
             "email": "%s",
             "placeOfResidence": "%s",
             "age": 20,
-            "gender": "MALE"
+            "gender": "男性"
           },
             "studentCourseList": [
                 {
