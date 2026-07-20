@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import raisetech.student.management.data.Student;
-import raisetech.student.management.data.enums.EnumGender;
 
 @MybatisTest
 class StudentRepositoryTest {
@@ -42,7 +41,7 @@ class StudentRepositoryTest {
     student.setNameKana("タナカタロウ");
     student.setNickname("タロー");
     student.setEmail("test@example.com");
-    student.setGender(EnumGender.MALE);
+    student.setGender("male");
     student.setPlaceOfResidence("福岡");
     student.setRemark("");
     student.setDeleted(false);
