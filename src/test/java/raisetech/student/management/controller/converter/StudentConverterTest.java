@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.data.enums.EnumCourseName;
+import raisetech.student.management.data.enums.EnumGender;
 import raisetech.student.management.domain.StudentDetail;
 
 class StudentConverterTest {
@@ -26,7 +28,7 @@ class StudentConverterTest {
     StudentCourse studentCourse = new StudentCourse();
     studentCourse.setId(1);
     studentCourse.setStudentId(1);
-    studentCourse.setCourseName("Javaフルコース");
+    studentCourse.setCourseName(EnumCourseName.JAVA_FULL);
     studentCourse.setStartDate(LocalDate.now());
     studentCourse.setEndDate(LocalDate.now().plusYears(1));
 
@@ -46,7 +48,7 @@ class StudentConverterTest {
     StudentCourse studentCourse = new StudentCourse();
     studentCourse.setId(1);
     studentCourse.setStudentId(2);
-    studentCourse.setCourseName("Javaフルコース");
+    studentCourse.setCourseName(EnumCourseName.JAVA_FULL);
     studentCourse.setStartDate(LocalDate.now());
     studentCourse.setEndDate(LocalDate.now().plusYears(1));
 
@@ -67,7 +69,7 @@ class StudentConverterTest {
     student.setNameKana("タナカタロウ");
     student.setNickname("タロー");
     student.setEmail("test@example.com");
-    student.setGender("male");
+    student.setGender(EnumGender.MALE);
     student.setPlaceOfResidence("福岡");
     student.setRemark("");
     student.setDeleted(false);
