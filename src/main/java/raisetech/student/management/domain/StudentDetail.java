@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.data.StudentCourseStatus;
 
 @Schema(description = "受講生詳細")
 @Getter
@@ -22,4 +23,7 @@ public class StudentDetail {
 
   @Valid
   private List<StudentCourse> studentCourseList;
+
+  @Valid
+  private List<StudentCourseStatus> statusList;
 }

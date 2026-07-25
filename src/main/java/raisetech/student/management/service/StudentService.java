@@ -1,6 +1,7 @@
 package raisetech.student.management.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.data.StudentCourseStatus;
+import raisetech.student.management.data.enums.EnumCourseStatus;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.repository.StudentCourseRepository;
+import raisetech.student.management.repository.StudentCourseStatusRepository;
 import raisetech.student.management.repository.StudentRepository;
 
 /**
@@ -22,12 +26,14 @@ public class StudentService {
 
   private final StudentRepository repository;
   private final StudentCourseRepository courseRepository;
+  private final StudentCourseStatusRepository statusRepository;
   private final StudentConverter converter;
 
   @Autowired
-  public StudentService(StudentRepository repository, StudentCourseRepository courseRepository,StudentConverter converter) {
+  public StudentService(StudentRepository repository, StudentCourseRepository courseRepository,StudentCourseStatusRepository statusRepository,StudentConverter converter) {
     this.repository = repository;
     this.courseRepository = courseRepository;
+    this.statusRepository = statusRepository;
     this.converter = converter;
   }
 
@@ -40,15 +46,16 @@ public class StudentService {
   public List<StudentDetail> searchStudentList(){
     List<Student> studentList = repository.search();
     List<StudentCourse> studentCourseList = courseRepository.searchCourse();
+    List<StudentCourseStatus> statusList = statusRepository.searchStatus();
     if(studentList.isEmpty()){
       throw new TestException("現在、登録されている学生情報は0件です。");
     }
-    return converter.convertStudentDetails(studentList, studentCourseList);
+    return converter.convertStudentDetails(studentList, studentCourseList, statusList);
   }
 
   /**
    * 受講生詳細の検索
-   * IDに紐づく任意の受講生の情報を取得した後、その受講生に紐づく受講生コース情報を取得し設定します。
+   * IDに紐づく任意の受講生の情報を取得した後、その受講生に紐づく受講生コース情報とコースの申込状況を取得し設定します。
    *
    * @param id 受講生ID
    * @return 受講生情報
@@ -59,12 +66,20 @@ public class StudentService {
       throw new TestException("ID"+ id +"に該当する生徒情報はありませんでした。");
     }
     List<StudentCourse> studentCourseList = courseRepository.searchStudentCourse(student.getId());
-    return new StudentDetail(student, studentCourseList);
+    List<StudentCourseStatus> statusList = new ArrayList<>();
+    for(StudentCourse course : studentCourseList){
+      StudentCourseStatus status = statusRepository.searchStatusByCourseId(course.getId());
+      if(status != null) {
+        statusList.add(status);
+      }
+    }
+    return new StudentDetail(student, studentCourseList, statusList);
   }
 
   /**
    * 受講生詳細の登録
    * 受講生と受講生コース情報を個別に登録し、受講生コース情報には受講生情報を紐づけるための値とコース開始日、コース終了日を設定します。
+   * 受講コースの申込状況はデフォルトで”仮申込”に設定されます。
    *
    * @param studentDetail 受講生詳細
    * @return 登録情報を付与した受講生詳細
@@ -74,15 +89,21 @@ public class StudentService {
     Student student = studentDetail.getStudent();
 
     repository.registerStudent(student);
+
     studentDetail.getStudentCourseList().forEach(studentCourse -> {
       initStudentCourse(studentCourse, student.getId());
       courseRepository.registerCourse(studentCourse);
+
+      StudentCourseStatus status = new StudentCourseStatus();
+      status.setCourseId(studentCourse.getId());
+      status.setStatus(EnumCourseStatus.TEMPORARY_APPLICATION);
+      statusRepository.registerCourseStatus(status);
     });
     return studentDetail;
   }
 
   /**
-   * 受講生コース情報を登録する際の初期情報を設定する。
+   * 受講生コース情報を登録する際の初期情報を設定します。
    *
    * @param studentCourse 受講生コース情報
    * @param id 受講生ID
@@ -97,7 +118,7 @@ public class StudentService {
 
   /**
    * 受講生詳細の更新
-   * 受講生と受講生コース情報をそれぞれ更新します。
+   * 受講生と受講生コース情報、コースの申込状況をそれぞれ更新します。
    *
    * @param studentDetail 受講生詳細
    */
@@ -109,5 +130,9 @@ public class StudentService {
     }
     repository.updateStudent(studentDetail.getStudent());
     studentDetail.getStudentCourseList().forEach(courseRepository::updateStudentCourse);
+
+    if (studentDetail.getStatusList() != null) {
+      studentDetail.getStatusList().forEach(statusRepository::updateCourseStatus);
+    }
   }
 }
