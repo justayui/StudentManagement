@@ -47,11 +47,11 @@ class StudentConverterTest {
 
     assertThat(actualResult.get(0).getStudent()).isEqualTo(student);
     assertThat(actualResult.get(0).getStudentCourseList()).isEqualTo(courseList);
-    assertThat(actualResult.get(0).getStatusList()).isEqualTo(statusList);
+    assertThat(actualResult.get(0).getStatus()).isEqualTo(courseStatus);
   }
 
   @Test
-  void 受講生のリストと受講生コース情報のリストを渡した時に紐づかない受講生コース情報とそれに紐づく申込状況は除外されること(){
+  void 受講生のリストと受講生コース情報のリストを渡した時に紐づかない受講生コース情報と申込状況は除外されること(){
     Student student = createStudent();
 
     StudentCourse studentCourse = new StudentCourse();
@@ -74,7 +74,7 @@ class StudentConverterTest {
 
     assertThat(actualResult.get(0).getStudent()).isEqualTo(student);
     assertThat(actualResult.get(0).getStudentCourseList()).isEmpty();
-    assertThat(actualResult.get(0).getStatusList()).isEmpty();
+    assertThat(actualResult.get(0).getStatus()).isNull();
   }
 
   private static @NonNull Student createStudent() {

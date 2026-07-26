@@ -87,20 +87,19 @@ class StudentServiceTest {
     studentCourse.setId(2);
     studentCourse.setStudentId(1);
     List<StudentCourse> studentCourseList = List.of(studentCourse);
-    StudentCourseStatus status = new StudentCourseStatus();
-    status.setId(2);
-    status.setCourseId(2);
-    List<StudentCourseStatus> expectedStatusList = List.of(status);
+    StudentCourseStatus expectedStatus = new StudentCourseStatus();
+    expectedStatus.setId(2);
+    expectedStatus.setCourseId(2);
 
     when(repository.searchStudent(1)).thenReturn(student);
     when(courseRepository.searchStudentCourse(1)).thenReturn(studentCourseList);
-    when(statusRepository.searchStatusByCourseId(2)).thenReturn(status);
+    when(statusRepository.searchStatusByCourseId(2)).thenReturn(expectedStatus);
 
     StudentDetail actualResult = sut.getStudentById(1);
 
     Assertions.assertEquals(student,actualResult.getStudent());
     Assertions.assertEquals(studentCourseList,actualResult.getStudentCourseList());
-    Assertions.assertEquals(expectedStatusList,actualResult.getStatusList());
+    Assertions.assertEquals(expectedStatus,actualResult.getStatus());
 
     verify(repository, times(1)).searchStudent(1);
     verify(courseRepository, times(1)).searchStudentCourse(1);
@@ -122,9 +121,9 @@ class StudentServiceTest {
     StudentCourse studentCourse = new StudentCourse();
     studentCourse.setId(10);
     List<StudentCourse> courseList = List.of(studentCourse);
-    List<StudentCourseStatus> statusList = new ArrayList<>();
+    StudentCourseStatus status = new StudentCourseStatus();
 
-    StudentDetail studentDetail = new StudentDetail(student,courseList,statusList);
+    StudentDetail studentDetail = new StudentDetail(student,courseList,status);
 
     sut.registerStudent(studentDetail);
 
@@ -166,8 +165,7 @@ class StudentServiceTest {
     StudentCourseStatus status = new StudentCourseStatus();
     status.setId(2);
     status.setCourseId(2);
-    List<StudentCourseStatus> statusList = List.of(status);
-    StudentDetail studentDetail = new StudentDetail(student,courseList,statusList);
+    StudentDetail studentDetail = new StudentDetail(student,courseList,status);
 
     when(repository.searchStudent(1)).thenReturn(student);
 

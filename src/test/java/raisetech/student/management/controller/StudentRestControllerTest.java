@@ -151,13 +151,12 @@ class StudentRestControllerTest {
                        "endDate" : "2027-07-07"
                      }
                   ],
-                  "studentCourseStatus":[
+                  "status":
                      {
                        "id" : 20,
                        "courseId" : 20,
                        "status" : "TEMPORARY_APPLICATION"
                      }
-                  ]
                 }
                 """
             ))
