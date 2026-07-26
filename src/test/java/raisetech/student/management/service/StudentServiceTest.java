@@ -1,5 +1,7 @@
 package raisetech.student.management.service;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -148,9 +150,27 @@ class StudentServiceTest {
     sut.initStudentCourse(studentCourse,student.getId());
 
     Assertions.assertEquals(999, studentCourse.getStudentId());
-    //getTimeFormatter?を使ってより厳密に検証するのが望ましい。
     Assertions.assertEquals(LocalDate.now(),studentCourse.getStartDate());
     Assertions.assertEquals(LocalDate.now().plusYears(1), studentCourse.getEndDate());
+  }
+
+  @Test
+  void 受講生登録の途中でエラーが発生した場合にロールバックされること(){
+    Student student = new Student();
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId(10);
+    List<StudentCourse> courseList = List.of(studentCourse);
+    StudentCourseStatus status = new StudentCourseStatus();
+
+    StudentDetail studentDetail = new StudentDetail(student,courseList,status);
+
+    doThrow(new RuntimeException("DBエラー"))
+        .when(courseRepository).registerCourse(any());
+
+    Assertions.assertThrows(RuntimeException.class,()->{sut.registerStudent(studentDetail);
+    });
+
+    verify(repository,times(1)).registerStudent(any());
   }
 
   //受講生詳細の更新
