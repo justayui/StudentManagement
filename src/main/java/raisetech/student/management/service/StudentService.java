@@ -65,12 +65,15 @@ public class StudentService {
       throw new TestException("ID"+ id +"に該当する生徒情報はありませんでした。");
     }
     List<StudentCourse> studentCourseList = courseRepository.searchStudentCourse(student.getId());
-    StudentCourseStatus status = null;
+    List<StudentCourseStatus> statusList = List.of();
     if (!studentCourseList.isEmpty()) {
-      Integer courseId = studentCourseList.getFirst().getId();
-      status = statusRepository.searchStatusByCourseId(courseId);
-    }
-    return new StudentDetail(student, studentCourseList, status);
+      List<Integer> courseIds = studentCourseList.stream()
+          .map(StudentCourse::getId)
+          .toList();
+
+      statusList = statusRepository.searchStatusByCourseId(courseIds);
+  }
+    return new StudentDetail(student, studentCourseList, statusList);
   }
 
   /**
@@ -128,8 +131,8 @@ public class StudentService {
     repository.updateStudent(studentDetail.getStudent());
     studentDetail.getStudentCourseList().forEach(courseRepository::updateStudentCourse);
 
-    if (studentDetail.getStatus() != null) {
-      statusRepository.updateCourseStatus(studentDetail.getStatus());
+    if (studentDetail.getStatusList() != null) {
+      studentDetail.getStatusList().forEach(statusRepository::updateCourseStatus);
     }
   }
 }

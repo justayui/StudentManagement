@@ -20,10 +20,10 @@ public interface StudentCourseStatusRepository {
   /**
    * コースIDに紐づくコース申込状況を検索します。
    *
-   * @param courseId 受講コースID
+   * @param courseIds 受講コースID
    * @return コースIDに紐づくコース申込状況
    */
-  StudentCourseStatus searchStatusByCourseId(Integer courseId);
+  List<StudentCourseStatus> searchStatusByCourseId(List<Integer> courseIds);
 
   /**
    * コース申込状況を新規登録します。

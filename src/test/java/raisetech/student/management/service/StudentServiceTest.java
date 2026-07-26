@@ -89,23 +89,24 @@ class StudentServiceTest {
     studentCourse.setId(2);
     studentCourse.setStudentId(1);
     List<StudentCourse> studentCourseList = List.of(studentCourse);
-    StudentCourseStatus expectedStatus = new StudentCourseStatus();
-    expectedStatus.setId(2);
-    expectedStatus.setCourseId(2);
+    StudentCourseStatus status = new StudentCourseStatus();
+    status.setId(2);
+    status.setCourseId(2);
+    List<StudentCourseStatus> expectedStatusList = List.of(status);
 
     when(repository.searchStudent(1)).thenReturn(student);
     when(courseRepository.searchStudentCourse(1)).thenReturn(studentCourseList);
-    when(statusRepository.searchStatusByCourseId(2)).thenReturn(expectedStatus);
+    when(statusRepository.searchStatusByCourseId(List.of(2))).thenReturn(expectedStatusList);
 
     StudentDetail actualResult = sut.getStudentById(1);
 
     Assertions.assertEquals(student,actualResult.getStudent());
     Assertions.assertEquals(studentCourseList,actualResult.getStudentCourseList());
-    Assertions.assertEquals(expectedStatus,actualResult.getStatus());
+    Assertions.assertEquals(expectedStatusList,actualResult.getStatusList());
 
     verify(repository, times(1)).searchStudent(1);
     verify(courseRepository, times(1)).searchStudentCourse(1);
-    verify(statusRepository, times(1)).searchStatusByCourseId(2);
+    verify(statusRepository, times(1)).searchStatusByCourseId(List.of(2));
   }
 
   @Test
@@ -123,9 +124,9 @@ class StudentServiceTest {
     StudentCourse studentCourse = new StudentCourse();
     studentCourse.setId(10);
     List<StudentCourse> courseList = List.of(studentCourse);
-    StudentCourseStatus status = new StudentCourseStatus();
+    List<StudentCourseStatus> statusList = new ArrayList<>();
 
-    StudentDetail studentDetail = new StudentDetail(student,courseList,status);
+    StudentDetail studentDetail = new StudentDetail(student,courseList, statusList);
 
     sut.registerStudent(studentDetail);
 
@@ -160,9 +161,9 @@ class StudentServiceTest {
     StudentCourse studentCourse = new StudentCourse();
     studentCourse.setId(10);
     List<StudentCourse> courseList = List.of(studentCourse);
-    StudentCourseStatus status = new StudentCourseStatus();
+    List<StudentCourseStatus> statusList = new ArrayList<>();
 
-    StudentDetail studentDetail = new StudentDetail(student,courseList,status);
+    StudentDetail studentDetail = new StudentDetail(student,courseList,statusList);
 
     doThrow(new RuntimeException("DBエラー"))
         .when(courseRepository).registerCourse(any());
@@ -185,7 +186,8 @@ class StudentServiceTest {
     StudentCourseStatus status = new StudentCourseStatus();
     status.setId(2);
     status.setCourseId(2);
-    StudentDetail studentDetail = new StudentDetail(student,courseList,status);
+    List<StudentCourseStatus> statusList = List.of(status);
+    StudentDetail studentDetail = new StudentDetail(student,courseList,statusList);
 
     when(repository.searchStudent(1)).thenReturn(student);
 

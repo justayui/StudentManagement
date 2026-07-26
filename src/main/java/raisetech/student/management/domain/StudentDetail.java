@@ -25,5 +25,5 @@ public class StudentDetail {
   private List<StudentCourse> studentCourseList;
 
   @Valid
-  private StudentCourseStatus status;
+  private List<StudentCourseStatus> statusList;
 }

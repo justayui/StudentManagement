@@ -24,10 +24,10 @@ class StudentCourseStatusRepositoryTest {
 
   @Test
   void 受講コースIDに紐づく申込状況の検索が行えること(){
-    StudentCourseStatus actual = sut.searchStatusByCourseId(1);
+    List<StudentCourseStatus> actual = sut.searchStatusByCourseId(List.of(1));
 
     assertThat(actual).isNotNull();
-    assertThat(actual.getStatus()).isEqualTo(EnumCourseStatus.MAIN_APPLICATION);
+    assertThat(actual.getFirst().getStatus()).isEqualTo(EnumCourseStatus.MAIN_APPLICATION);
   }
 
   @Test
@@ -37,20 +37,21 @@ class StudentCourseStatusRepositoryTest {
 
     sut.registerCourseStatus(status);
 
-    StudentCourseStatus actual = sut.searchStatusByCourseId(10);
+    List<StudentCourseStatus> actual = sut.searchStatusByCourseId(List.of(10));
 
-    assertThat(actual.getStatus()).isEqualTo(EnumCourseStatus.TEMPORARY_APPLICATION);
+    assertThat(actual.getFirst().getStatus()).isEqualTo(EnumCourseStatus.TEMPORARY_APPLICATION);
   }
 
   @Test
   void コースの申込状況の更新ができること(){
-    StudentCourseStatus status = sut.searchStatusByCourseId(1);
+    List<StudentCourseStatus> statusList = sut.searchStatusByCourseId(List.of(1));
+    StudentCourseStatus status = statusList.getFirst();
     status.setStatus(EnumCourseStatus.IN_PROGRESS);
 
     sut.updateCourseStatus(status);
 
-    StudentCourseStatus actual = sut.searchStatusByCourseId(1);
+    List<StudentCourseStatus> actual = sut.searchStatusByCourseId(List.of(1));
 
-    assertThat(actual.getStatus()).isEqualTo(EnumCourseStatus.IN_PROGRESS);
+    assertThat(actual.getFirst().getStatus()).isEqualTo(EnumCourseStatus.IN_PROGRESS);
   }
 }

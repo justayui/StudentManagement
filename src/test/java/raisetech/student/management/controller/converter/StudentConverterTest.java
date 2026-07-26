@@ -47,7 +47,7 @@ class StudentConverterTest {
 
     assertThat(actualResult.get(0).getStudent()).isEqualTo(student);
     assertThat(actualResult.get(0).getStudentCourseList()).isEqualTo(courseList);
-    assertThat(actualResult.get(0).getStatus()).isEqualTo(courseStatus);
+    assertThat(actualResult.get(0).getStatusList()).isEqualTo(statusList);
   }
 
   @Test
@@ -74,7 +74,7 @@ class StudentConverterTest {
 
     assertThat(actualResult.get(0).getStudent()).isEqualTo(student);
     assertThat(actualResult.get(0).getStudentCourseList()).isEmpty();
-    assertThat(actualResult.get(0).getStatus()).isNull();
+    assertThat(actualResult.get(0).getStatusList()).isEmpty();
   }
 
   private static @NonNull Student createStudent() {
