@@ -1,7 +1,6 @@
 package raisetech.student.management.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,14 +65,12 @@ public class StudentService {
       throw new TestException("ID"+ id +"に該当する生徒情報はありませんでした。");
     }
     List<StudentCourse> studentCourseList = courseRepository.searchStudentCourse(student.getId());
-    List<StudentCourseStatus> statusList = new ArrayList<>();
-    for(StudentCourse course : studentCourseList){
-      StudentCourseStatus status = statusRepository.searchStatusByCourseId(course.getId());
-      if(status != null) {
-        statusList.add(status);
-      }
+    StudentCourseStatus status = null;
+    if (!studentCourseList.isEmpty()) {
+      Integer courseId = studentCourseList.getFirst().getId();
+      status = statusRepository.searchStatusByCourseId(courseId);
     }
-    return new StudentDetail(student, studentCourseList, statusList);
+    return new StudentDetail(student, studentCourseList, status);
   }
 
   /**
@@ -131,8 +128,8 @@ public class StudentService {
     repository.updateStudent(studentDetail.getStudent());
     studentDetail.getStudentCourseList().forEach(courseRepository::updateStudentCourse);
 
-    if (studentDetail.getStatusList() != null) {
-      studentDetail.getStatusList().forEach(statusRepository::updateCourseStatus);
+    if (studentDetail.getStatus() != null) {
+      statusRepository.updateCourseStatus(studentDetail.getStatus());
     }
   }
 }

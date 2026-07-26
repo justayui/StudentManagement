@@ -44,10 +44,12 @@ public class StudentConverter {
           .map(StudentCourse::getId)
           .toList();
 
-      List<StudentCourseStatus> converterStatusList = statusList.stream()
+      StudentCourseStatus converterStatus = statusList.stream()
           .filter(status -> courseIds.contains(status.getCourseId()))
-          .collect(Collectors.toList());
-      studentDetail.setStatusList(converterStatusList);
+          .findFirst()
+          .orElse(null);
+
+      studentDetail.setStatus(converterStatus);
 
       studentDetails.add(studentDetail);
     });
