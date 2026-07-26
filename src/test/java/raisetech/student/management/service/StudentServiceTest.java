@@ -11,14 +11,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.data.StudentCourseStatus;
+import raisetech.student.management.data.enums.EnumCourseStatus;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.repository.StudentCourseRepository;
+import raisetech.student.management.repository.StudentCourseStatusRepository;
 import raisetech.student.management.repository.StudentRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,28 +34,30 @@ class StudentServiceTest {
   private StudentCourseRepository courseRepository;
 
   @Mock
+  private StudentCourseStatusRepository statusRepository;
+
+  @Mock
   private StudentConverter converter;
 
   private StudentService sut;
 
   @BeforeEach
   void before(){
-    sut = new StudentService(repository, courseRepository, converter);
+    sut = new StudentService(repository, courseRepository, statusRepository, converter);
   }
 
 
 //受講生詳細一覧検索に関するテスト
 @Test
   void 受講生詳細の一覧検索＿リポジトリとコンバーターの処理が適切に呼び出せていること(){
-    List<Student> studentList = new ArrayList<>();
-    studentList.add(new Student());
-    List<StudentCourse> studentCourseList = new ArrayList<>();
-    studentCourseList.add(new StudentCourse());
-    List<StudentDetail> expectedDetailList = new ArrayList<>();
-    expectedDetailList.add(new StudentDetail());
+    List<Student> studentList = List.of(new Student());
+    List<StudentCourse> studentCourseList = List.of(new StudentCourse());
+    List<StudentCourseStatus> statusList = List.of(new StudentCourseStatus());
+    List<StudentDetail> expectedDetailList = List.of(new StudentDetail());
     when(repository.search()).thenReturn(studentList);
     when(courseRepository.searchCourse()).thenReturn(studentCourseList);
-    when(converter.convertStudentDetails(studentList,studentCourseList)).thenReturn(expectedDetailList);
+    when(statusRepository.searchStatus()).thenReturn(statusList);
+    when(converter.convertStudentDetails(studentList,studentCourseList,statusList)).thenReturn(expectedDetailList);
 
     List<StudentDetail> actualResult = sut.searchStudentList();
 
@@ -59,7 +65,8 @@ class StudentServiceTest {
 
     verify(repository, times(1)).search();
     verify(courseRepository,times(1)).searchCourse();
-    verify(converter,times(1)).convertStudentDetails(studentList,studentCourseList);
+    verify(statusRepository, times(1)).searchStatus();
+    verify(converter,times(1)).convertStudentDetails(studentList,studentCourseList,statusList);
   }
 
 @Test
@@ -73,20 +80,31 @@ class StudentServiceTest {
 
 //受講生詳細のID検索に関するテスト
 @Test
-  void IDに紐づく受講生詳細の検索＿登録処理が適切に呼び出せていること(){
+  void IDに紐づく受講生詳細の検索＿検索処理が適切に呼び出せていること(){
     Student student = new Student();
     student.setId(1);
-    List<StudentCourse> studentCourseList = new ArrayList<>();
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId(2);
+    studentCourse.setStudentId(1);
+    List<StudentCourse> studentCourseList = List.of(studentCourse);
+    StudentCourseStatus status = new StudentCourseStatus();
+    status.setId(2);
+    status.setCourseId(2);
+    List<StudentCourseStatus> expectedStatusList = List.of(status);
+
     when(repository.searchStudent(1)).thenReturn(student);
     when(courseRepository.searchStudentCourse(1)).thenReturn(studentCourseList);
+    when(statusRepository.searchStatusByCourseId(2)).thenReturn(status);
 
-    StudentDetail actualResult = sut.getStudentById(student.getId());
+    StudentDetail actualResult = sut.getStudentById(1);
 
     Assertions.assertEquals(student,actualResult.getStudent());
     Assertions.assertEquals(studentCourseList,actualResult.getStudentCourseList());
+    Assertions.assertEquals(expectedStatusList,actualResult.getStatusList());
 
     verify(repository, times(1)).searchStudent(1);
     verify(courseRepository, times(1)).searchStudentCourse(1);
+    verify(statusRepository, times(1)).searchStatusByCourseId(2);
   }
 
   @Test
@@ -102,13 +120,23 @@ class StudentServiceTest {
     void 受講生詳細の登録＿リポジトリに適切な情報を渡せていること(){
     Student student = new Student();
     StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId(10);
     List<StudentCourse> courseList = List.of(studentCourse);
-    StudentDetail studentDetail = new StudentDetail(student,courseList);
+    List<StudentCourseStatus> statusList = new ArrayList<>();
+
+    StudentDetail studentDetail = new StudentDetail(student,courseList,statusList);
 
     sut.registerStudent(studentDetail);
 
     verify(repository, times(1)).registerStudent(student);
     verify(courseRepository, times(1)).registerCourse(studentCourse);
+
+    ArgumentCaptor<StudentCourseStatus> statusCaptor = ArgumentCaptor.forClass(StudentCourseStatus.class);
+    verify(statusRepository, times(1)).registerCourseStatus(statusCaptor.capture());
+
+    StudentCourseStatus capturedStatus = statusCaptor.getValue();
+    Assertions.assertEquals(10, capturedStatus.getCourseId());
+    Assertions.assertEquals(EnumCourseStatus.TEMPORARY_APPLICATION, capturedStatus.getStatus());
   }
 
   @Test
@@ -132,8 +160,14 @@ class StudentServiceTest {
     Student student = new Student();
     student.setId(1);
     StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setId(2);
+    studentCourse.setStudentId(1);
     List<StudentCourse> courseList = List.of(studentCourse);
-    StudentDetail studentDetail = new StudentDetail(student,courseList);
+    StudentCourseStatus status = new StudentCourseStatus();
+    status.setId(2);
+    status.setCourseId(2);
+    List<StudentCourseStatus> statusList = List.of(status);
+    StudentDetail studentDetail = new StudentDetail(student,courseList,statusList);
 
     when(repository.searchStudent(1)).thenReturn(student);
 
@@ -141,6 +175,7 @@ class StudentServiceTest {
 
     verify(repository, times(1)).updateStudent(student);
     verify(courseRepository, times(1)).updateStudentCourse(studentCourse);
+    verify(statusRepository, times(1)).updateCourseStatus(status);
   }
 
   @Test
