@@ -16,6 +16,6 @@ public class StudentCourseStatus {
   @Schema(description = "申込状況に紐づく受講生コースIDです。", example = "1")
   private int courseId;
 
-  @Schema(description = "受講生コースの申込状況です。仮申込・本申込・受講中・受講終了の4つから選択します。", example = "受講中")
-  private EnumCourseStatus status;
+  @Schema(description = "受講生コースの申込状況です。仮申込・本申込・受講中・受講終了の4つから選択します。初期値は仮申込です。", example = "受講中")
+  private EnumCourseStatus status = EnumCourseStatus.TEMPORARY_APPLICATION;
 }
