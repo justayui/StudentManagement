@@ -56,6 +56,17 @@ class StudentRepositoryTest {
   }
 
   @Test
+  void 受講生の名前とメールアドレスの複数条件で絞込検索が行えること(){
+    StudentSearchCondition condition = new StudentSearchCondition("田中", null, "tanaka.taro@example.com");
+
+    List<Student> actual = sut.search(condition);
+
+    assertThat(actual).hasSize(1);
+    assertThat(actual.get(0).getName()).contains("田中");
+    assertThat(actual.get(0).getEmail()).isEqualTo("tanaka.taro@example.com");
+  }
+
+  @Test
   void 受講生のID検索が行えること(){
     Student actual = sut.searchStudent(1);
 
