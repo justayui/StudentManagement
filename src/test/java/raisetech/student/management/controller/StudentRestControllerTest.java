@@ -1,6 +1,7 @@
 package raisetech.student.management.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import java.util.List;
 import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -58,6 +60,23 @@ class StudentRestControllerTest {
         .andExpect(status().isNotFound());
 
     verify(service, times(1)).searchStudentList(any(StudentSearchCondition.class));
+  }
+
+  @Test
+  void クエリパラメータが検索条件クラスに正しくバインドされること()throws Exception{
+    when(service.searchStudentList(any(StudentSearchCondition.class))).thenReturn(List.of());
+
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/studentList")
+        .param("name","山田")
+        .param("nameKana","ヤマダ")
+        .param("email","yamada.sho@example.com"))
+        .andExpect(status().isOk());
+
+    verify(service).searchStudentList(argThat(condition->
+                "山田".equals(condition.name())&&
+                "ヤマダ".equals(condition.nameKana())&&
+                "yamada.sho@example.com".equals(condition.email())
+        ));
   }
 
   //IDに紐づく受講生詳細の検索に関するテスト
