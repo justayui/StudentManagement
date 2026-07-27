@@ -20,6 +20,7 @@ import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.data.StudentCourseStatus;
+import raisetech.student.management.data.StudentSearchCondition;
 import raisetech.student.management.data.enums.EnumCourseStatus;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
@@ -52,20 +53,22 @@ class StudentServiceTest {
 //受講生詳細一覧検索に関するテスト
 @Test
   void 受講生詳細の一覧検索＿リポジトリとコンバーターの処理が適切に呼び出せていること(){
+    StudentSearchCondition condition = new StudentSearchCondition(null, null, null);
+
     List<Student> studentList = List.of(new Student());
     List<StudentCourse> studentCourseList = List.of(new StudentCourse());
     List<StudentCourseStatus> statusList = List.of(new StudentCourseStatus());
     List<StudentDetail> expectedDetailList = List.of(new StudentDetail());
-    when(repository.search()).thenReturn(studentList);
+    when(repository.search(condition)).thenReturn(studentList);
     when(courseRepository.searchCourse()).thenReturn(studentCourseList);
     when(statusRepository.searchStatus()).thenReturn(statusList);
     when(converter.convertStudentDetails(studentList,studentCourseList,statusList)).thenReturn(expectedDetailList);
 
-    List<StudentDetail> actualResult = sut.searchStudentList();
+    List<StudentDetail> actualResult = sut.searchStudentList(condition);
 
     Assertions.assertEquals(expectedDetailList,actualResult);
 
-    verify(repository, times(1)).search();
+    verify(repository, times(1)).search(condition);
     verify(courseRepository,times(1)).searchCourse();
     verify(statusRepository, times(1)).searchStatus();
     verify(converter,times(1)).convertStudentDetails(studentList,studentCourseList,statusList);
@@ -73,10 +76,12 @@ class StudentServiceTest {
 
 @Test
   void 受講生詳細の一覧検索＿受講生が0件の場合＿適切な例外を投げることができていること(){
-    List<Student> emptyList = new ArrayList<>();
-    when(repository.search()).thenReturn(emptyList);
+    StudentSearchCondition condition = new StudentSearchCondition(null, null, null);
 
-    Assertions.assertThrows(TestException.class,()->{sut.searchStudentList();
+    List<Student> emptyList = new ArrayList<>();
+    when(repository.search(condition)).thenReturn(emptyList);
+
+    Assertions.assertThrows(TestException.class,()->{sut.searchStudentList(condition);
     });
 }
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import raisetech.student.management.data.Student;
+import raisetech.student.management.data.StudentSearchCondition;
 import raisetech.student.management.data.enums.EnumGender;
 
 @MybatisTest
@@ -17,9 +18,41 @@ class StudentRepositoryTest {
 
   @Test
   void 受講生の全件検索が行えること(){
-    List<Student> actual = sut.search();
+    StudentSearchCondition condition = new StudentSearchCondition(null, null, null);
+
+    List<Student> actual = sut.search(condition);
 
     assertThat(actual).hasSize(5);
+  }
+
+  @Test
+  void 受講生の名前であいまい検索が行えること(){
+    StudentSearchCondition condition = new StudentSearchCondition("山田", null, null);
+
+    List<Student> actual = sut.search(condition);
+
+    assertThat(actual).isNotEmpty();
+    assertThat(actual).allMatch(student -> student.getName().contains("山田"));
+  }
+
+  @Test
+  void 受講生のフリガナであいまい検索が行えること(){
+    StudentSearchCondition condition = new StudentSearchCondition(null, "ヤマダ", null);
+
+    List<Student> actual = sut.search(condition);
+
+    assertThat(actual).isNotEmpty();
+    assertThat(actual).allMatch(student -> student.getNameKana().contains("ヤマダ"));
+  }
+
+  @Test
+  void メールアドレスで受講生の検索が行えること(){
+    StudentSearchCondition condition = new StudentSearchCondition(null, null, "tanaka.taro@example.com");
+
+    List<Student> actual = sut.search(condition);
+
+    assertThat(actual).hasSize(1);
+    assertThat(actual.get(0).getEmail()).isEqualTo("tanaka.taro@example.com");
   }
 
   @Test
@@ -47,7 +80,8 @@ class StudentRepositoryTest {
 
     sut.registerStudent(student);
 
-    List<Student> actual = sut.search();
+    StudentSearchCondition condition = new StudentSearchCondition(null, null, null);
+    List<Student> actual = sut.search(condition);
     assertThat(actual).hasSize(6);
   }
 

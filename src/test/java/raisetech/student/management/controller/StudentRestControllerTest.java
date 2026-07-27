@@ -21,6 +21,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import raisetech.student.management.data.Student;
+import raisetech.student.management.data.StudentSearchCondition;
 import raisetech.student.management.data.enums.EnumGender;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
@@ -44,19 +45,19 @@ class StudentRestControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.get("/api/studentList"))
         .andExpect(status().isOk());
 
-    verify(service, times(1)).searchStudentList();
+    verify(service, times(1)).searchStudentList(any(StudentSearchCondition.class));
   }
 
   @Test
   void 受講生詳細一覧検索＿登録データが0件で例外が発生したときに404エラーが返ること()
       throws Exception {
-    when(service.searchStudentList()).thenThrow(
+    when(service.searchStudentList(any(StudentSearchCondition.class))).thenThrow(
         new TestException("現在、登録されている学生情報は0件です。"));
 
     mockMvc.perform(MockMvcRequestBuilders.get("/api/studentList"))
         .andExpect(status().isNotFound());
 
-    verify(service, times(1)).searchStudentList();
+    verify(service, times(1)).searchStudentList(any(StudentSearchCondition.class));
   }
 
   //IDに紐づく受講生詳細の検索に関するテスト
