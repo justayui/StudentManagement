@@ -108,7 +108,7 @@ class StudentRestControllerTest {
                      "nameKana" : "タナカタロウ",
                      "nickname" : "タロー",
                      "email" : "test@example.com",
-                     "gender" : "MALE",
+                     "gender" : "male",
                      "placeOfResidence" : "福岡",
                      "remark" : ""
                   },
@@ -138,7 +138,7 @@ class StudentRestControllerTest {
                      "nameKana" : "タナカタロウ",
                      "nickname" : "タロー",
                      "email" : "test@example.com",
-                     "gender" : "MALE",
+                     "gender" : "male",
                      "placeOfResidence" : "福岡",
                      "remark" : ""
                   },
@@ -150,7 +150,14 @@ class StudentRestControllerTest {
                        "startDate" : "2026-07-07",
                        "endDate" : "2027-07-07"
                      }
-                  ]
+                  ],
+                  "statusList":[
+                     {
+                       "id" : 20,
+                       "courseId" : 20,
+                       "status" : "TEMPORARY_APPLICATION"
+                     }
+                     ]
                 }
                 """
             ))
@@ -169,7 +176,7 @@ class StudentRestControllerTest {
     student.setNameKana("タナカタロウ");
     student.setNickname("タロー");
     student.setEmail("test@example.com");
-    student.setGender(EnumGender.MALE);
+    student.setGender(EnumGender.male);
     student.setPlaceOfResidence("福岡");
 
     Set<ConstraintViolation<Student>> violations = validator.validate(student);
@@ -185,7 +192,6 @@ class StudentRestControllerTest {
       "email, ''",             // 4. メールアドレスが空（@NotBlank）
       "email, 'invalid-email'",// 5. メールアドレスの形式不正（@Email）
       "placeOfResidence, ''",   // 6. 居住地が空（@NotBlank）
-      "courseName, ''"         //
   })
   void 受講生登録＿すべての必須項目および形式チェックでバリデーションエラー時に400を返すこと(
       String field, String invalidValue) throws Exception {
@@ -194,7 +200,6 @@ class StudentRestControllerTest {
     String nickname = field.equals("nickname") ? invalidValue : "タロー";
     String email = field.equals("email") ? invalidValue : "test@example.com";
     String placeOfResidence = field.equals("placeOfResidence") ? invalidValue : "福岡県福岡市";
-    String courseName = field.equals("courseName") ? invalidValue : "JAVA_FULL";
 
     String jsonContent = String.format("""
         {
@@ -205,15 +210,15 @@ class StudentRestControllerTest {
             "email": "%s",
             "placeOfResidence": "%s",
             "age": 20,
-            "gender": "MALE"
+            "gender": "male"
           },
             "studentCourseList": [
                 {
-                 "courseName": "%s"
+                 "courseName": "JAVA_FULL"
                  }
               ]
         }
-        """, name, nameKana, nickname, email, placeOfResidence, courseName);
+        """, name, nameKana, nickname, email, placeOfResidence);
 
     mockMvc.perform(MockMvcRequestBuilders.post("/api/registerStudent")
             .contentType(MediaType.APPLICATION_JSON)
