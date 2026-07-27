@@ -26,7 +26,7 @@ class StudentCourseStatusRepositoryTest {
   void 受講コースIDに紐づく申込状況の検索が行えること(){
     List<StudentCourseStatus> actual = sut.searchStatusByCourseId(List.of(1));
 
-    assertThat(actual).isNotNull();
+    assertThat(actual).isNotEmpty();
     assertThat(actual.get(0).getStatus()).isEqualTo(EnumCourseStatus.MAIN_APPLICATION);
   }
 

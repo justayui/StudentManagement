@@ -2,6 +2,7 @@ package raisetech.student.management.repository;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import raisetech.student.management.data.StudentCourseStatus;
 
 /**
@@ -23,7 +24,7 @@ public interface StudentCourseStatusRepository {
    * @param courseIds 受講コースID
    * @return コースIDに紐づくコース申込状況
    */
-  List<StudentCourseStatus> searchStatusByCourseId(List<Integer> courseIds);
+  List<StudentCourseStatus> searchStatusByCourseId(@Param("courseIds") List<Integer> courseIds);
 
   /**
    * コース申込状況を新規登録します。
