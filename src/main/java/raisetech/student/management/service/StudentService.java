@@ -9,6 +9,7 @@ import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.data.StudentCourseStatus;
+import raisetech.student.management.data.StudentSearchCondition;
 import raisetech.student.management.data.enums.EnumCourseStatus;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.TestException;
@@ -38,12 +39,13 @@ public class StudentService {
 
   /**
    * 受講生詳細の一覧検索
-   * 全件検索を行うため、条件指定は行いません
+   * 名前・フリガナ・メールアドレスの条件指定ができます。
+   * 名前・フリガナは部分一致で可。メールアドレスは完全一致が必要です。
    *
    * @return 受講生詳細一覧（全件）
    */
-  public List<StudentDetail> searchStudentList(){
-    List<Student> studentList = repository.search();
+  public List<StudentDetail> searchStudentList(StudentSearchCondition condition){
+    List<Student> studentList = repository.search(condition);
     List<StudentCourse> studentCourseList = courseRepository.searchCourse();
     List<StudentCourseStatus> statusList = statusRepository.searchStatus();
     if(studentList.isEmpty()){

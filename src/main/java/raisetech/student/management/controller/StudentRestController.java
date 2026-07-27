@@ -10,11 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import raisetech.student.management.data.StudentSearchCondition;
 import raisetech.student.management.service.StudentService;
 import raisetech.student.management.domain.StudentDetail;
 
@@ -33,14 +35,15 @@ public class StudentRestController implements StudentApi {
 
   /**
    * 受講生詳細の一覧検索
-   * 全件検索を行うため、条件指定は行いません
+   * 名前・フリガナ・メールアドレスの条件指定ができます。
+   * 名前・フリガナは部分一致で可。メールアドレスは完全一致が必要です。
    *
    * @return 受講生詳細一覧（全件）
    */
   @GetMapping("/api/studentList")
   @Override
-  public List<StudentDetail> getStudentList(){
-    return service.searchStudentList();
+  public List<StudentDetail> getStudentList(@ModelAttribute StudentSearchCondition condition){
+    return service.searchStudentList(condition);
   }
 
   /**

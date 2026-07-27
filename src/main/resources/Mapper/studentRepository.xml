@@ -5,6 +5,17 @@
   <!-- 受講生の全件検索 -->
   <select id="search" resultType="raisetech.student.management.data.Student">
     SELECT * FROM student
+    <where>
+      <if test="name != null and name != ''">
+        AND name LIKE CONCAT('%', #{name}, '%')
+      </if>
+      <if test="nameKana != null and nameKana != ''">
+        AND name_kana LIKE CONCAT('%', #{nameKana}, '%')
+      </if>
+      <if test="email != null and email != ''">
+        AND email = #{email}
+      </if>
+    </where>
   </select>
 
   <!-- 受講生の検索 -->
