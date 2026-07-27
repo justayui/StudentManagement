@@ -14,6 +14,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import raisetech.student.management.controller.StudentRestController.SuccessResponse;
+import raisetech.student.management.data.StudentSearchCondition;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.ErrorResponse;
 
@@ -36,7 +37,7 @@ public interface StudentApi {
           description = "サーバー内部エラー。データベースへの接続失敗など、予期せぬシステム異常が発生した場合に返却されます。",
           content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
   })
-  List<StudentDetail> getStudentList();
+  List<StudentDetail> getStudentList(StudentSearchCondition condition);
 
   @Operation(summary = "受講生ID検索",description = "指定したIDに紐づく受講生の情報を検索します。")
   @ApiResponses(value = {

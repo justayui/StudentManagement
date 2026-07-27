@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import raisetech.student.management.data.StudentSearchCondition;
 import raisetech.student.management.service.StudentService;
 import raisetech.student.management.domain.StudentDetail;
 
@@ -39,8 +40,8 @@ public class StudentRestController implements StudentApi {
    */
   @GetMapping("/api/studentList")
   @Override
-  public List<StudentDetail> getStudentList(){
-    return service.searchStudentList();
+  public List<StudentDetail> getStudentList(StudentSearchCondition condition){
+    return service.searchStudentList(condition);
   }
 
   /**
