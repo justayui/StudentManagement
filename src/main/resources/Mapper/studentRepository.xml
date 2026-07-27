@@ -12,7 +12,7 @@
       <if test="nameKana != null and nameKana != ''">
         AND name_kana LIKE CONCAT('%', #{nameKana}, '%')
       </if>
-      <if test="email != null and nameKana != ''">
+      <if test="email != null and email != ''">
         AND email = #{email}
       </if>
     </where>
