@@ -14,8 +14,6 @@ class StudentRepositoryTest {
 
   @Autowired
   private StudentRepository sut;
-  @Autowired
-  private StudentCourseRepository courseRepository;
 
   @Test
   void 受講生の全件検索が行えること(){
@@ -42,7 +40,7 @@ class StudentRepositoryTest {
     student.setNameKana("タナカタロウ");
     student.setNickname("タロー");
     student.setEmail("test@example.com");
-    student.setGender(EnumGender.MALE);
+    student.setGender(EnumGender.male);
     student.setPlaceOfResidence("福岡");
     student.setRemark("");
     student.setDeleted(false);
