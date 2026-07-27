@@ -15,18 +15,18 @@ import raisetech.student.management.data.enums.EnumCourseName;
 class StudentCourseRepositoryTest {
 
   @Autowired
-  private StudentCourseRepository courseRepository;
+  private StudentCourseRepository sut;
 
   //StudentCourseRepository.Test
   @Test
   void 受講生コース情報が全件検索できること(){
-    List<StudentCourse> actual = courseRepository.searchCourse();
+    List<StudentCourse> actual = sut.searchCourse();
     assertThat(actual).hasSize(9);
   }
 
   @Test
   void 受講生IDに紐づく受講生コース情報の検索ができること(){
-    List<StudentCourse> actual = courseRepository.searchStudentCourse(1);
+    List<StudentCourse> actual = sut.searchStudentCourse(1);
 
     assertThat(actual).hasSize(2);
     assertThat(actual).extracting("courseName").containsExactlyInAnyOrder(EnumCourseName.JAVA_FULL,EnumCourseName.AWS);
@@ -39,15 +39,15 @@ class StudentCourseRepositoryTest {
     course.setStartDate(LocalDate.now());
     course.setEndDate(LocalDate.now().plusYears(1));
 
-    courseRepository.registerCourse(course);
+    sut.registerCourse(course);
 
-    List<StudentCourse> actual = courseRepository.searchCourse();
+    List<StudentCourse> actual = sut.searchCourse();
     assertThat(actual).hasSize(10);
   }
 
   @Test
   void 受講生コースの更新ができること(){
-    List<StudentCourse> courseList =courseRepository.searchStudentCourse(1);
+    List<StudentCourse> courseList =sut.searchStudentCourse(1);
     assertThat(courseList).hasSize(2);
 
     StudentCourse targetCourse = null;
@@ -61,9 +61,9 @@ class StudentCourseRepositoryTest {
     assertThat(targetCourse).isNotNull();
 
     targetCourse.setCourseName(EnumCourseName.WEB_DEVELOPMENT);
-    courseRepository.updateStudentCourse(targetCourse);
+    sut.updateStudentCourse(targetCourse);
 
-    List<StudentCourse> actual = courseRepository.searchStudentCourse(1);
+    List<StudentCourse> actual = sut.searchStudentCourse(1);
     assertThat(actual).hasSize(2);
     assertThat(actual).extracting("courseName").containsExactlyInAnyOrder(EnumCourseName.WEB_DEVELOPMENT,EnumCourseName.AWS);
   }
